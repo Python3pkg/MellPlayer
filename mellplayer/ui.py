@@ -111,7 +111,7 @@ class UI(object):
             display_lines = self.fill_blanks(display_lines)
         # add tail
         display_lines = self.add_tail(source_list=display_lines, tail='\r')
-        print('\n'.join(display_lines))
+        print(('\n'.join(display_lines)))
         
     def gen_category(self, category, is_markline=False):
         '''
@@ -145,7 +145,7 @@ class UI(object):
         blank_lines[int(blank_length / 2)] = str_center(string=text, screen_width=self.screen_width)
         display_lines.extend(blank_lines)
         display_lines = self.add_tail(source_list=display_lines, tail='\r')
-        print('\n'.join(display_lines) + '\r')
+        print(('\n'.join(display_lines) + '\r'))
 
     # =====================
     # UI Controller
@@ -201,7 +201,7 @@ class UI(object):
         return data
 
     def add_tail(self, source_list, tail):
-        return map(lambda x: '%s%s' % (str(x), tail), source_list)
+        return ['%s%s' % (str(x), tail) for x in source_list]
 
     def fill_blanks(self, display_lines, all_lines=ALL_LINES, position='after'):
         '''
@@ -255,7 +255,7 @@ class HelpUI(UI):
         display_lines = ['\r']
         display_title = '\n%s%s' % (' '*5, self.title)
         display_lines.append(display_title)
-        for key, help_line in HELP_LINES.items():
+        for key, help_line in list(HELP_LINES.items()):
             colored_help_line = self.color_line(key=key, line=help_line)
             display_lines.append('%s%s' % (' '*5, colored_help_line))
 
@@ -265,7 +265,7 @@ class HelpUI(UI):
             display_lines = self.fill_blanks(display_lines, all_lines=all_lines)
         # add tail
         display_lines = self.add_tail(source_list=display_lines, tail='\r')
-        print('\n'.join(display_lines))
+        print(('\n'.join(display_lines)))
 
     def color_line(self, key, line):
         if key.startswith('control'):
@@ -335,7 +335,7 @@ class LyricUI(UI):
             line = self.gen_color(data=line, color='light_gray')
             display_lines.append(line)
         display_lines = self.add_tail(source_list=display_lines, tail='\r')
-        print('\n'.join(display_lines) + '\r')
+        print(('\n'.join(display_lines) + '\r'))
 
     def display_center(self, text, display_lines):
         blank_length = self.screen_height - BLANK_CONSTANT
@@ -343,7 +343,7 @@ class LyricUI(UI):
         blank_lines[int(blank_length / 2)] = str_center(string=text, screen_width=self.screen_width)
         display_lines.extend(blank_lines)
         display_lines = self.add_tail(source_list=display_lines, tail='\r')
-        print('\n'.join(display_lines) + '\r')
+        print(('\n'.join(display_lines) + '\r'))
 
     def roll(self, timestamp):
         lyric_times = self.lyric_times

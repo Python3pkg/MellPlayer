@@ -424,7 +424,7 @@ class MPV(object):
         try:
             for flag in extra_mpv_flags:
                 _mpv_set_option_string(self.handle, flag.encode('utf-8'), b'')
-            for k,v in extra_mpv_opts.items():
+            for k,v in list(extra_mpv_opts.items()):
                 _mpv_set_option_string(self.handle, k.replace('_', '-').encode('utf-8'), istr(v).encode('utf-8'))
         finally:
             _mpv_initialize(self.handle)
@@ -522,7 +522,7 @@ class MPV(object):
 
     @staticmethod
     def _encode_options(options):
-        return ','.join('{}={}'.format(str(key), str(val)) for key, val in options.items())
+        return ','.join('{}={}'.format(str(key), str(val)) for key, val in list(options.items()))
 
     def loadfile(self, filename, mode='replace', **options):
         self.command('loadfile', filename.encode(fs_enc), mode, MPV._encode_options(options))
@@ -627,7 +627,7 @@ class MPV(object):
                     '<key> is either the literal character the key produces (ASCII or Unicode character), or a '
                     'symbolic name (as printed by --input-keylist')
         binding_name = MPV._binding_name(keydef)
-        if callable(callback_or_cmd):
+        if isinstance(callback_or_cmd, collections.Callable):
             self._key_binding_handlers[binding_name] = callback_or_cmd
             self.register_message_handler('key-binding', self._handle_key_binding_message)
             self.command('define-section',
@@ -645,7 +645,7 @@ class MPV(object):
         binding_name = MPV._binding_name(keydef)
         self.command('disable-section', binding_name)
         self.command('define-section', binding_name, '')
-        if callable(callback):
+        if isinstance(callback, collections.Callable):
             del self._key_binding_handlers[binding_name]
             if not self._key_binding_handlers:
                 self.unregister_message_handler('key-binding')
@@ -922,6 +922,6 @@ def bindproperty(MPV, name, proptype, access, decode_str=False):
 
     setattr(MPV, name.replace('-', '_'), property(getter if 'r' in access else barf, setter if 'w' in access else barf))
 
-for name, (proptype, access, *args) in ALL_PROPERTIES.items():
+for name, (proptype, access, *args) in list(ALL_PROPERTIES.items()):
     bindproperty(MPV, name, proptype, access, *args)
 

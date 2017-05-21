@@ -146,7 +146,7 @@ class Player(MPV):
         song_ids = self.playlist_ids
         data = NeteaseApi.song_detail_new(song_ids)
         song_details = NeteaseApi.parse_info(data=data, parse_type='song_detail_new')
-        song_urls = list(map(lambda x: x['song_url'], song_details.values()))
+        song_urls = list([x['song_url'] for x in list(song_details.values())])
         if not any(song_urls):
             err_msg = 'Ooops! The song API only supports the Chinese Mainland visit...'
             UiEvent.handler_show_error(err_msg)

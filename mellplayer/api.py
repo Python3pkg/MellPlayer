@@ -105,7 +105,7 @@ class Netease(object):
                 'song_id': t['id'],
                 'song_name': t['name'],
                 'song_url': t['mp3Url'],
-                'song_artists': ' & '.join(map(lambda a: a['name'], t['artists']))
+                'song_artists': ' & '.join([a['name'] for a in t['artists']])
             } for t in tracks}
             res = (playlist_ids, playlist_detail)
         elif parse_type == 'lyric_detail':
